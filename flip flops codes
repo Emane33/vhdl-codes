@@ -1,0 +1,126 @@
+#codes for flip flop
+
+#code for D flip flop:
+entity d_ff is
+Port( d , clk , prst , rst : in bit;
+      q , qnot: out bit);
+end d_ff;
+
+architecture d_ff_arch of d_ff is
+signal qint: bit;
+begin
+process
+begin
+
+wait until clk'event and clk='1';
+
+if rst='1' then qint <= '0';
+elsif prst='1' then qint <= '1';
+else qint<= d;
+end if;
+end process;
+
+q<= qint;
+qnot <= not qint;
+end d_ff_arch;
+
+# code for T flip flop:
+entity t_ff is
+Port( t , clk  : in bit;
+      q , qnot: out bit);
+end t_ff;
+
+architecture t_ff_arch of t_ff is
+signal qint: bit;
+begin
+process
+begin
+
+wait until clk'event and clk='1';
+if t='1' then qint <= not qint;
+end if;
+end process;
+
+q<= qint;
+qnot <= not qint;
+
+end t_ff_arch;
+
+#code for SR flip flop:
+entity sr_ff is
+Port( s , r , clk  : in bit;
+      q , qnot: out bit);
+end sr_ff;
+
+architecture sr_ff_arch of sr_ff is
+signal qint: bit;
+begin
+process
+begin
+
+wait until clk'event and clk='1';
+if r='1' then qint <= '0';
+elsif s='1' then qint <= '1';
+
+end if;
+end process;
+
+q<= qint;
+qnot <= not qint;
+
+end sr_ff_arch;
+
+#code for jk flip flop:
+entity jk_ff is
+Port( j , k , clk  : in bit;
+      q , qnot: out bit);
+end jk_ff;
+
+architecture jk_ff_arch of jk_ff is
+signal qint: bit;
+begin
+process
+begin
+
+wait until clk'event and clk='1';
+            if j='0' and k='0' then
+                qint <= qint; -- holds the previous state
+            elsif j='1' and k='0' then
+                qint <= '1'; -- set
+            elsif j='0' and k='1' then
+                qint <= '0'; -- reset
+            elsif j='1' and k='1' then
+                qint <= not qint; -- toggle
+end if;
+end process;
+
+q<= qint;
+qnot <= not qint;
+
+end jk_ff_arch;
+
+#code for unsynchronised D flip flop:
+entity d_ff is
+Port( d , clk , prst , rst : in bit;
+      q , qnot: out bit);
+end d_ff;
+
+architecture d_ff_arch of d_ff is
+signal qint: bit;
+begin
+process(rst , clk)
+begin
+
+if rst='1' then qint <= '0';
+
+elsif (clk'event and clk='1') then
+
+if prst='1' then qint <= '1';
+else qint<= d;
+end if;
+end if;
+end process;
+
+q<= qint;
+qnot <= not qint;
+end d_ff_arch;
