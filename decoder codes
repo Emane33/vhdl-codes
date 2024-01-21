@@ -1,0 +1,34 @@
+codes for decoders:-
+
+#3 to 8 decoder:
+entity dec38 is
+    Port(A: in bit_vector(2 downto 0);
+         f: out bit_vector(7 downto 0));
+end dec38;
+
+architecture dec_arch of dec38 is
+begin
+    f <= "00000001" when "000" else
+         "00000010" when "001" else
+         "00000100" when "010" else
+         "00001000" when "011" else
+         "00010000" when "100" else
+         "00100000" when "101" else
+         "01000000" when "110" else
+         "10000000";
+end dec_arch;
+
+#2 to 4 decoder:
+
+entity dec24 is
+    Port (a: in bit_vector(1 downto 0);
+          f: out bit_vector(3 downto 0));
+end dec24;
+
+architecture dec_arch of dec24 is
+begin
+    f <= "0001" when "00" else
+         "0010" when "01" else
+         "0100" when "10" else
+         "1000";
+end dec_arch;
