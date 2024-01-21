@@ -1,0 +1,33 @@
+# code for 3 bites register:
+entity reg is
+    port(
+        clk : in bit;
+        rst : in bit;
+        load : in bit;
+        din : in bit_vector(2 downto 0);
+		  sin: in bit;
+		  set: in bit;
+        shift : in bit;
+        dout : out bit_vector(2 downto 0)
+    );
+end reg;
+
+architecture reg_arch of reg is
+    signal dint : bit_vector(2 downto 0);
+begin
+dout <= dint;
+    process
+    begin
+	 wait until clk'event and clk='1';
+        if rst = '1' then
+            dint <= "000";
+			elsif set='1' then 
+			   dint<= "111";
+        elsif load = '1' then
+                dint <= din;
+        elsif shift = '0' then
+                dint <= dint(2 downto 1) & sin;
+			else dint<= dint(1 downto 0 )& sin;
+    end if;
+    end process;
+end reg_arch;
