@@ -1,0 +1,23 @@
+#codes for gates:=
+
+#code for nand gate:
+entity nand1 is
+    Port(a , b: in bit;
+         q : out bit);
+end nand1;
+
+architecture nand_arch of nand1 is
+begin
+    q <= not (a and b);
+end nand_arch;
+
+#code for not gate:
+entity nor1 is
+    Port(a , b: in bit;
+         q : out bit);
+end nor1;
+
+architecture nor_arch of nor1 is
+begin
+    q <= not (a or b);
+end nor_arch;
