@@ -1,0 +1,181 @@
+#ITCE 251 Final Semester 2– 2015-2016
+
+#design by writing VHDL code 2-to-4 decoder using select statement; simulate your design for all different
+#combinations of the input variables. [5 marks]
+entity m_mc is
+Port(a : in bit_vector(1 downto 0);
+      c: out bit_vector(3 downto 0) );
+end m_mc;
+
+architecture m_arch of m_mc is
+begin
+with a select
+c<= "0001" when  "00",
+    "0001" when "01",
+	 "0010" when "10",
+	 "0011" when "11",
+	 "0000" when others;
+ 
+end m_arch
+
+#b. Design by writing VHDL code 1-to-2 decoder with enable input using case statement; simulate your design for
+#all different combinations of the input variables. [5 marks]
+entity m_mc is
+Port(b : in bit;
+     en: in bit;
+      d: out bit_vector(1 downto 0) );
+end m_mc;
+
+architecture m_arch of m_mc is
+begin
+process(b , en)
+begin
+if (en='1') then 
+case b is
+    when '0'=> d<=  "01";
+    when '1'=>d <= "10";
+	 when others=> d<= "00";
+ end case;	 
+ end if;
+ end process;
+end m_arch;
+
+#c. Design 3-to-8 decoder using any number of 1-to-2 decodes and 2-to-4 decoder as components. [5 marks]
+entity m_mc is
+Port(e : in bit_vector(2 downto 0);
+     en: in bit;
+     f: out bit_vector(7 downto 0) );
+end m_mc;
+
+architecture m_arch of m_mc is
+signal sel: bit_vector(1 downto 0);
+
+component dec12 is
+port( b: in bit;
+      en: in bit;
+      d: out bit_vector(1 downto 0));
+end component;
+
+component dec24 is
+port( a: in bit_vector( 1 downto 0);
+     c: out bit_vector(3 downto 0));
+end component;
+
+begin
+
+u0: dec24 port map(e(1 downto 0) , f(3 downto 0));
+u1 : dec24 port map (e(1 downto 0) , f(7 downto 4));
+u2: dec12 port map( e(2) , en , sel);
+end m_arch;
+entity m_mc is
+Port( clk: in bit;
+    sel : in bit_vector( 1 downto 0);
+	 q: out bit);
+end m_mc;
+
+#Design by writing a complete VHDL code program a sequential 4-to-1 Mux circuit that has two inputs (sel 2-bits, and
+clk), and one output (Q), the input (clk) has frequency (f), and is going to be used for generating four different clocks
+(clk1, clk2, clk3, and clk4), with frequencies (f/2, f/4, f/8, and f/16) respectively. The four generated clock signals will
+be used as data inputs to the mux.
+
+architecture m_arch of m_mc is
+signal clk1 , clk2 , clk3 , clk4: bit;
+begin
+process(clk)
+variable r: integer range 2 to 0;
+begin
+if(clk'event and clk='1') then
+r := r+1;
+if (r=1) then clk1<='1';
+elsif (r=2 ) then clk1<='0';
+r :=0;
+elsif(r<1) then clk1<='0';
+end if;
+end if;
+end process;
+-------------------------------------------
+process(clk)
+variable r: integer range 4 to 0;
+begin
+if(clk'event and clk='1') then
+r := r+1;
+if (r=2) then clk2<='1';
+elsif (r=4 ) then clk2<='0';
+r :=0;
+elsif(r<2) then clk2<='0';
+end if;
+end if;
+end process;
+------------------------------------------
+process(clk)
+variable r: integer range 8 to 0;
+begin
+if(clk'event and clk='1') then
+r := r+1;
+if (r=4) then clk3<='1';
+elsif (r=8 ) then clk3<='0';
+r :=0;
+elsif(r<4) then clk3<='0';
+end if;
+end if;
+end process;
+-----------------------------------------
+process(clk)
+variable r: integer range 16 to 0;
+begin
+if(clk'event and clk='1') then
+r := r+1;
+if (r=8) then clk4<='1';
+elsif (r=16 ) then clk4<='0';
+r :=0;
+elsif(r<8) then clk4<='0';
+end if;
+end if;
+end process;
+----------------------------------------
+process(clk)
+begin
+case sel is
+when "00" => q <= clk4;
+when "01" => q <= clk1;
+when "10" => q <= clk2;
+when "11" => q <= clk3;
+end case;
+end process;
+
+end m_arch;
+
+#Design a 3-bit up-down binary counter, with active low asynchronous
+clear. The transition graph for an up-down counter is shown in the
+given state graph. When U = 1, the counter counts up in the sequence
+000, 001, 010, 011, 100, 101, 110, 111, 000 . . . When D = 1, the counter
+counts down in the sequence 000, 111, 110, 101, 100, 011, 010, 001,
+000 . . . When U = D = 0, the counter state does not change, and the
+higher priority of the counter is for counting up
+
+library ieee;
+ use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity m_mc is
+Port( clk , rst , d , u: in std_logic;
+	 q: out std_logic_vector( 2 downto 0));
+end m_mc;
+
+architecture m_arch of m_mc is
+signal c: unsigned( 2 downto 0);
+begin
+process(rst , clk)
+begin
+if(rst='1') then c<="000";
+elsif(clk'event and clk='1') then
+if( u='1') then c<=c+"001";
+elsif(d='1') then c<=c-"001";
+else c<=c+1;
+end if;
+end if;
+end process;
+q<=std_logic_vector(c); 
+
+
+end m_arch;
