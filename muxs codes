@@ -1,0 +1,110 @@
+#code for muxs:-
+
+#code for 4 to 1 mux:
+entity mux41 is
+Port(a , b , c ,d: in bit;
+     sel: in bit_vector(1 downto 0) ;
+	  f: out bit);
+end mux41;
+
+architecture mux_arch of mux41 is 
+begin
+with sel select
+f<= a when "00",
+b when "01",
+c when "10",
+d when "11",
+others => '0';
+end mux_arch;
+
+#code for 8 to 1 mux:
+entity mux41 is
+Port(a , b , c ,d , e , g, h , i: in bit;
+     sel: in bit_vector(2 downto 0);
+	  f: out bit);
+end mux41;
+
+architecture mux_arch of mux41 is 
+begin
+with sel select
+f<= a when "000",
+b when "001",
+c when "010",
+d when "011",
+e when "100",
+g when "101",
+h when "110",
+i when "111",
+others => '0';
+
+end mux_arch;
+
+#code for 2 to 1 mux:
+entity mux21 is
+Port(a , b: in bit;
+     sel: in bit;
+     f: out bit);
+end mux21;
+
+architecture mux_arch of mux21 is
+begin
+with sel select
+f <= a when '0',
+     b when '1';
+end mux_arch;
+
+#code for creating 8 to 1 mux using 2 to 1 muxs:
+entity mux81 is
+Port( c: in bit_vector(7 downto 0);
+       sel: in bit_vector(2 downto 0);
+       g: out bit);
+end mux81;
+
+architecture mux_arch of mux81 is
+component mux21 is
+Port(a , b: in bit;
+     sel: in bit;
+     f: out bit);
+end component;
+
+signal s0, s1, s2, s3 : bit;
+
+begin
+u0: mux21 port map(c(0) , c(1), sel(0), s0);
+u1: mux21 port map(c(2) , c(3), sel(0), s1);
+u2: mux21 port map(c(4) , c(5), sel(0), s2);
+u3: mux21 port map(c(6) , c(7), sel(0), s3);
+
+u4: mux21 port map(s0 , s1, sel(1), s0);
+u5: mux21 port map(s2 , s3, sel(1), s1);
+
+u6: mux21 port map(s0 , s1, sel(2), g);
+
+end mux_arch;
+
+#code for creating 8 to 1 mux using 2 to 1 and 4 to 1 muxs:
+entity mux81 is
+Port( c: in bit_vector(7 downto 0);
+      sel: in bit_vector(3 downto 0 );
+		g: out bit);
+end mux81;
+
+architecture mux_arch of mux81 is
+signal s0 , s1 , s2 , s3: bit;
+component mux21 is
+Port( a , b: in bit;
+      sel: in bit;
+		f: out bit);
+end component;
+component mux41 is
+Port( d: in bit_vector(3 downto 0);
+      sel: in bit_vector(1 downto 0);
+		f: out bit);
+end component;
+
+begin
+u0: mux41 port map(c(0 to 3) , sel(0 to 1) , s0);
+u1: mux41 port map(c(4 to 7) , sel(0 to 1) , s1);
+u2: mux21 port map(s0, s1, sel(2) , g);
+
+end mux_arch;
