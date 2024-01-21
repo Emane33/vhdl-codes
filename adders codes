@@ -1,0 +1,83 @@
+#codes for adders:-
+
+#code for half adders:
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity half_adder is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           sum : out STD_LOGIC;
+           cout : out STD_LOGIC);
+end half_adder;
+
+architecture Behavioral of half_adder is
+begin
+    sum <= a xor b;
+    cout <= a and b;
+end Behavioral;
+
+#code for full adders:
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity full_adder is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           cin : in STD_LOGIC;
+           sum : out STD_LOGIC;
+           cout : out STD_LOGIC);
+end full_adder;
+
+architecture Behavioral of full_adder is
+begin
+    sum <= a xor b xor cin;
+    cout <= (a and b) or (cin and (a xor b));
+end Behavioral;
+
+#code for 4 full adders:
+Entity four_bit_full_adder is
+Port(A, B : in std_logic_vector(3 downto 0);
+     Cin : in std_logic;
+     Sum : out std_logic_vector(3 downto 0);
+     Cout : out std_logic);
+End four_bit_full_adder;
+
+Architecture Behavioral of four_bit_full_adder is
+Component full_adder
+    Port(A, B, Cin : in std_logic;
+         Sum, Cout : out std_logic);
+End Component;
+
+Signal C : std_logic_vector(4 downto 0);
+
+Begin
+    C(0) <= Cin;
+    FA0 : full_adder Port Map(A(0), B(0), C(0), Sum(0), C(1));
+    FA1 : full_adder Port Map(A(1), B(1), C(1), Sum(1), C(2));
+    FA2 : full_adder Port Map(A(2), B(2), C(2), Sum(2), C(3));
+    FA3 : full_adder Port Map(A(3), B(3), C(3), Sum(3), C(4));
+    Cout <= C(4);
+End Behavioral
+
+#code for creating full adder using 2 half adders:
+Entity full_adder is
+Port(a , b , cin: in bit;
+         sum, cout: out bit);
+End full_adder;
+
+Architecture full_arch of full_adder is
+Signal s0 , c0, c1: bit;
+Component half_adder is
+Port(x , y: in bit;
+        S , c_out: out bit);
+End component;
+Component or1 is
+Port(a ,b: in bit;
+         Q: out bit);
+End component;
+Begin 
+U0: half_adder port map(a , b , s0 , c0);
+U1: half_adder port map(s0 , cin , sum, c1);
+U2: or1 port map(c0, c1, cout);
+End full_arch;
