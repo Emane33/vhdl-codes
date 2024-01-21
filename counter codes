@@ -1,0 +1,39 @@
+#codes for counter:-
+
+#code for three bites counter:
+entity counter is
+Port(rst , clk: in bit;
+     c: out integer range 0 to 7);
+end counter;
+
+architecture counter_arch of counter is
+signal cint: integer range 0 to 7;
+begin 
+process(rst , clk)
+begin
+if rst='1' then cint<= 0;
+elsif ( clk'event and clk='1') then cint<=cint+1;
+end if;
+end process;
+c<= cint;
+end counter_arch;
+
+#code for three bit counter with enable:
+entity counter is
+Port(rst , clk , en: in bit;
+     c: out integer range 0 to 7);
+end counter;
+
+architecture counter_arch of counter is
+signal cint: integer range 0 to 7;
+begin 
+process(rst , clk , en)
+begin
+if (en = '1') then
+if rst='1' then cint<= 0;
+elsif ( clk'event and clk='1') then cint<=cint+1;
+end if;
+end if;
+end process;
+c<= cint;
+end counter_arch;
