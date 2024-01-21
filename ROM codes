@@ -1,0 +1,57 @@
+#codes for ROM:-
+
+#code for ROM saving intered values from user using gates:
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity rom is
+    port(
+        a : in std_logic;
+        b : in std_logic;
+        and_out : out std_logic;
+        or_out : out std_logic;
+        xor_out : out std_logic
+    );
+end rom;
+architecture rom_arch of rom is
+begin
+    and_out <= a and b;
+    or_out <= a or b;
+    xor_out <= a xor b;
+end rom_arch;
+
+#ROM code with signals:
+entity m_mc is
+Port(add: in bit_vector(1 downto 0);
+      rom_out: out bit_vector(0 to 2));
+end m_mc;
+
+architecture m_arch of m_mc is
+Type rom_mem is array(0 to 3) of bit_vector(0 to 2);
+Constant rom_m: rom_mem:=("000","010", "011","110");
+Signal i: integer range 0 to 3;
+begin
+i <= 0 when add = "00" else
+     1 when add = "01" else
+     2 when add = "10" else
+     3 when add = "11" else
+     0; -- default value
+rom_out <= rom_m(i);
+end m_arch;
+
+#ROM code without signals:
+entity romcomp is
+Port(add: in bit_vector(1 downto 0);
+      rom_out: out bit_vector(0 to 2));
+end romcomp;
+architecture rom_arch of romcomp is
+Type rom_mem is array(0 to 3) of bit_vector(0 to 2);
+Constant rom_m: rom_mem:=(0=>"000",
+1=> "010", 
+2=>"011",
+3=> "110");
+Signal i: integer range 0 to 3;
+begin
+rom_out<= rom_m(i);
+
+end rom_arch;
